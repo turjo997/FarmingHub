@@ -5,6 +5,7 @@ import com.project.farmingHub.domain.Breed;
 import com.project.farmingHub.model.Breed.BreedDto;
 import com.project.farmingHub.model.Breed.BreedAndProductDto;
 import com.project.farmingHub.model.Breed.BreedFetchDto;
+import com.project.farmingHub.model.Breed.BreedUpdateDto;
 import org.springframework.data.domain.Page;
 
 import org.springframework.hateoas.EntityModel;
@@ -24,4 +25,7 @@ public interface BreedService {
     Page<BreedAndProductDto> getAllBreedAndProducts(int pageNo , int pageSize , String searchKeyword);
 
     PagedModel<EntityModel<BreedAndProductDto>> getPaginatedBreeds(int pageNo, int pageSize);
+
+    BreedUpdateDto updateBreed(BreedUpdateDto breedUpdateDto, Long id);
+
 }

@@ -7,6 +7,7 @@ import com.project.farmingHub.exception.HealthProductServiceException;
 import com.project.farmingHub.model.Breed.BreedAndProductDto;
 import com.project.farmingHub.model.Breed.BreedDto;
 import com.project.farmingHub.model.Breed.BreedFetchDto;
+import com.project.farmingHub.model.Breed.BreedUpdateDto;
 import com.project.farmingHub.model.HealthProduct.HealthProductDto;
 import com.project.farmingHub.repo.BreedRepository;
 import com.project.farmingHub.repo.HealthProductRepository;
@@ -199,6 +200,25 @@ public class BreedServiceImpl implements BreedService {
 
 
         return pagedResourcesAssembler.toModel(breedAndProductDtos);
+    }
+
+    @Override
+    public BreedUpdateDto updateBreed(BreedUpdateDto dto, Long id) {
+        return breedRepo.findById(id)
+                .map(existingBreed -> {
+                    if(breedRepo.existsByBreedName(dto.getBreedName())){
+                        throw new ResponseStatusException(HttpStatus.BAD_REQUEST , "Breed with this name already exist");
+                    }
+                    if(dto.getBreedName() != null && !dto.getBreedName().trim().isEmpty()){
+                        existingBreed.setBreedName(dto.getBreedName());
+                    }
+                    Breed updatedBreed = breedRepo.save(existingBreed);
+
+                    return BreedUpdateDto.builder()
+                            .breedName(updatedBreed.getBreedName())
+                            .build();
+                })
+                .orElseThrow(()-> new ResponseStatusException(HttpStatus.BAD_REQUEST  , "Breed with " + id + "id not found"));
     }
 
 

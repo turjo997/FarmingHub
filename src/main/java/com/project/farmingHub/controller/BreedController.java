@@ -2,7 +2,9 @@ package com.project.farmingHub.controller;
 import com.project.farmingHub.exception.BreedServiceException;
 import com.project.farmingHub.model.Breed.BreedAndProductDto;
 import com.project.farmingHub.model.Breed.BreedDto;
+import com.project.farmingHub.model.Breed.BreedUpdateDto;
 import com.project.farmingHub.service.BreedService;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -58,6 +60,17 @@ public class BreedController {
     public ResponseEntity<?> getAllBreedAndProductsApproach2(@RequestParam(defaultValue = "0") int pageNo,
                                                     @RequestParam(defaultValue = "5") int pageSize) {
         return ResponseEntity.ok(breedService.getPaginatedBreeds(pageNo , pageSize));
+    }
+
+
+    @PutMapping("/update")
+    public ResponseEntity<String> updateBreed(@Valid @RequestBody BreedUpdateDto breedUpdateDto ,
+                                              @RequestParam Long id){
+        if(breedService.updateBreed(breedUpdateDto , id) != null){
+            return ResponseEntity.ok("Breed updated successfully");
+        }else{
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Breed updated failed");
+        }
     }
 
 }
